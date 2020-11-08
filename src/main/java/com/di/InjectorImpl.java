@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 public class InjectorImpl implements Injector {
 
-    private static final HashMap<Class<?>, Class<?>> bindings = new HashMap<Class<?>, Class<?>>();
+    private static final HashMap<Class<?>, Class<?>> bindings = new HashMap<>();
 
-    private static final HashMap<Class<?>, Object> singletonBindings = new HashMap<Class<?>, Object>();
+    private static final HashMap<Class<?>, Object> singletonBindings = new HashMap<>();
 
     /**
      * @param intf interface type of bean to inject implementation
@@ -32,7 +32,7 @@ public class InjectorImpl implements Injector {
             return (Provider<T>) returnProvider(singletonBindings.get(intf)); // if found, return provider with instance
         } else throw new BindingNotFoundException(); // else throw exception
 
-        final T finalObject = (T) getObjectFromContainer(type); // if interface was found in bindings, create an object of implementation type
+        final T finalObject = getObjectFromContainer(type); // if interface was found in bindings, create an object of implementation type
 
         return returnProvider(finalObject); // return provider with instance
     }
@@ -103,9 +103,9 @@ public class InjectorImpl implements Injector {
      *
      * @param clazz implementation class
      * @return Constructor with @Inject annotation
-     * @throws TooManyConstructorsException
-     * @throws ConstructorNotFoundException
-     * @throws BindingNotFoundException
+     * @throws TooManyConstructorsException thrown if there are more than 1 @Inject constructor
+     * @throws ConstructorNotFoundException thrown if neither @Inject constructor nor default constructor were found
+     * @throws BindingNotFoundException thrown if binding for interface class was not found
      */
     private Constructor<?> validateClass(Class<?> clazz) throws TooManyConstructorsException, ConstructorNotFoundException, BindingNotFoundException {
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
